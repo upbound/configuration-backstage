@@ -1,0 +1,288 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: CompositeResourceDefinition
+metadata:
+  name: xbackstages.sa.upbound.io
+spec:
+  defaultCompositeDeletePolicy: Foreground
+  group: sa.upbound.io
+  names:
+    categories:
+      - crossplane
+    kind: XBackstage
+    plural: xbackstages
+  versions:
+    - name: v1alpha1
+      referenceable: true
+      served: true
+      schema:
+        openAPIV3Schema:
+          description: >-
+            XBackstage is the Schema for the XBackstage API, defining the desired
+            state of a Backstage deployment along with supporting infrastructure
+            components.
+          type: object
+          required:
+            - spec
+          properties:
+            spec:
+              description: XBackstageSpec defines the desired state of XBackstage.
+              type: object
+              required:
+                - parameters
+              properties:
+                parameters:
+                  description: Configuration parameters for Backstage and optional infrastructure components.
+                  type: object
+                  required:
+                    - id
+                    - region
+                    - deletionPolicy
+                    - providerConfigName
+                    - infrastructure
+                    - replicas
+                    - image
+                    - ingress
+                    - config
+                  properties:
+                    id:
+                      type: string
+                      description: ID of this resource that other objects will use to refer to it.
+                    region:
+                      type: string
+                      description: Region in which to create the resource.
+                    deletionPolicy:
+                      description: Whether to delete or orphan external resources when this resource is deleted.
+                      type: string
+                      enum:
+                        - Delete
+                        - Orphan
+                      default: Delete
+                    providerConfigName:
+                      description: Crossplane ProviderConfig to use for provisioning this resource.
+                      type: string
+                      default: default
+                    replicas:
+                      type: integer
+                      minimum: 1
+                      description: Number of Backstage pod replicas to run for high availability.
+                    image:
+                      type: object
+                      description: Image configuration for the Backstage application.
+                      required:
+                        - registry
+                        - repository
+                        - tag
+                      properties:
+                        registry:
+                          type: string
+                          description: Container registry host (e.g., ghcr.io or docker.io).
+                        repository:
+                          type: string
+                          description: Image repository path (e.g., ghcr.io/backstage/backstage).
+                        tag:
+                          type: string
+                          description: Specific image tag or digest to deploy (e.g., "2025.1.0").
+                    config:
+                      type: object
+                      description: Free-form configuration object for Backstage.
+                      x-kubernetes-preserve-unknown-fields: true
+                    ingress:
+                      type: object
+                      description: Ingress configuration for the Backstage application.
+                      required:
+                        - enabled
+                        - host
+                        - clusterIssuer
+                        - className
+                      properties:
+                        enabled:
+                          type: boolean
+                          description: Whether to enable ingress for Backstage.
+                          default: true
+                        host:
+                          type: string
+                          description: DNS hostname for the Backstage ingress (e.g., backstage.example.com).
+                        clusterIssuer:
+                          type: string
+                          description: cert-manager ClusterIssuer to use for TLS.
+                          default: letsencrypt-prod
+                        className:
+                          type: string
+                          description: Ingress class name to use (e.g., nginx).
+                          default: nginx
+                    secretSync:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sourceRef:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                          destRef:
+                            type: object
+                            properties:
+                              name:
+                                type: string
+                              namespace:
+                                type: string
+                    infrastructure:
+                      description: Infrastructure configuration
+                      type: object
+                      required:
+                        - eks
+                      properties:
+                        externalDNS:
+                          type: object
+                          description: Configuration for external DNS management using Route53.
+                          required:
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                            route53ZoneId:
+                              type: string
+                        ingressNginx:
+                          type: object
+                          description: Configuration for the ingress-nginx controller to manage HTTP ingress resources.
+                          required:
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                              default: true
+                        certManager:
+                          type: object
+                          description: Configuration for cert-manager to automatically provision TLS certificates.
+                          required:
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                              default: true
+                        lbController:
+                          type: object
+                          description: Configuration for the AWS Load Balancer Controller to manage LoadBalancer resources.
+                          required:
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                              default: true
+                        eks:
+                          type: object
+                          required:
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                              default: true
+                            clusterName:
+                              type: string
+                              description: Name of the EKS cluster to create or manage.
+                            accessConfig:
+                              type: object
+                              description: Access control configuration for the EKS cluster.
+                              properties:
+                                bootstrapClusterCreatorAdminPermissions:
+                                  type: boolean
+                                  description: Whether to bootstrap the access config with admin permissions.
+                                authenticationMode:
+                                  type: string
+                                  enum:
+                                    - CONFIG_MAP
+                                    - API
+                                    - API_AND_CONFIG_MAP
+                                  description: Mode of authentication for EKS cluster.
+                              default:
+                                bootstrapClusterCreatorAdminPermissions: true
+                                authenticationMode: CONFIG_MAP
+                            iam:
+                              type: object
+                              description: IAM configuration to connect as ClusterAdmin.
+                              properties:
+                                principalArn:
+                                  description: The principal ARN to connect as ClusterAdmin.
+                                  type: string
+                            version:
+                              description: Kubernetes version
+                              type: string
+                              enum:
+                                - "1.31"
+                                - "1.30"
+                                - "1.29"
+                                - "1.28"
+                                - "1.27"
+                              default: "1.31"
+                            nodes:
+                              type: object
+                              description: EKS node configuration parameters.
+                              required:
+                                - count
+                                - instanceType
+                              properties:
+                                count:
+                                  type: integer
+                                  description: Desired node count, from 1 to 100.
+                                instanceType:
+                                  type: string
+                                  description: Instance types associated with the Node Group.
+                                  default: t3.small
+                        network:
+                          type: object
+                          required:
+                            - subnets
+                            - vpcCidrBlock
+                            - enabled
+                          properties:
+                            enabled:
+                              type: boolean
+                              enum: [true, false]
+                              default: true
+                            vpcCidrBlock:
+                              type: string
+                              description: CIDR block for the VPC.
+                              default: 192.168.0.0/16
+                            subnets:
+                              type: array
+                              description: Subnets to create in the VPC.
+                              items:
+                                type: object
+                                required:
+                                  - availabilityZone
+                                  - type
+                                  - cidrBlock
+                                properties:
+                                  availabilityZone:
+                                    type: string
+                                  type:
+                                    type: string
+                                    enum:
+                                      - public
+                                      - private
+                                  cidrBlock:
+                                    type: string
+                              default:
+                                - availabilityZone: us-west-2a
+                                  type: public
+                                  cidrBlock: 192.168.0.0/18
+                                - availabilityZone: us-west-2b
+                                  type: public
+                                  cidrBlock: 192.168.64.0/18
+                                - availabilityZone: us-west-2a
+                                  type: private
+                                  cidrBlock: 192.168.128.0/18
+                                - availabilityZone: us-west-2b
+                                  type: private
+                                  cidrBlock: 192.168.192.0/18
+            status:
+              type: object
+              description: XBackstageStatus defines the observed state of XBackstage.

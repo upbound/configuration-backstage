@@ -1,0 +1,28 @@
+[dependencies]
+  [dependencies.crossplane]
+    name = "crossplane"
+    full_name = "kcl-modules_crossplane_1.19.1"
+    version = "1.19.1"
+    sum = "6kue8GBkTzL6+TfjU/ennOG01/YHM6hncDG6/htHxFs="
+    reg = "xpkg.upbound.io"
+    repo = "upbound/kcl-modules_crossplane:1.19.0"
+    oci_tag = "1.19.1"
+  [dependencies.model]
+    name = "model"
+    full_name = "models_0.0.1"
+    version = "0.0.1"
+    reg = "ghcr.io"
+    repo = "kcl-lang/model"
+    oci_tag = "0.0.1"
+  [dependencies.models]
+    name = "models"
+    full_name = "models_0.0.1"
+    version = "0.0.1"
+  [dependencies.strategic_merge_patch]
+    name = "strategic_merge_patch"
+    full_name = "strategic_merge_patch_0.1.1"
+    version = "0.1.1"
+    sum = "ShCE30XjUQ8qbVB8TIbDDMkO+dQRR98JaS/vwVn3fI0="
+    reg = "ghcr.io"
+    repo = "kcl-lang/strategic_merge_patch"
+    oci_tag = "0.1.1"
