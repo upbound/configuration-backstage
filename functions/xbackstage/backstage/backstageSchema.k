@@ -14,15 +14,16 @@ schema Backstage:
         image
     replicas : int, default is Undefined, required
         Number of Backstage pod replicas to run for high availability.
+    ingress : Ingress, required
+        Configuration for enabling and managing Ingress access to the Backstage service.
     deletionPolicy : str, required
         Specifies the behavior when the resource is deleted.
         Options: 'Delete' (default), 'Orphan'.
-    clusterIssuer : str, optional
-        Specifies the CertManager Cluster Issuer to use for SSL for Ingress
-    host : str, required
-        Specifies the Host for Ingress
-    className : str, optional
-        Specifies the ClassName for Ingress
+    ocds : any, required
+        ocds to determine ready conditions for dependsOn resource
+    dependsOn : str, required
+        Specifies a dependency on another resource. This ensures that the Backstage
+        deployment is created only after the specified resource has been successfully provisioned.
     """
 
     name: str
