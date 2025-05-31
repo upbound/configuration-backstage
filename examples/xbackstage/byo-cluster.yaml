@@ -1,0 +1,36 @@
+apiVersion: sa.upbound.io/v1alpha1
+kind: XBackstage
+metadata:
+  name: byo-cluster-solution-idp
+spec:
+  parameters:
+    id: "solution-idp-non-prod-frontend"
+    region: "us-west-2"
+    providerConfigName: "default"
+    ingress:
+      enabled: true
+      host: "backstage-solution-idp.upboundrocks.cloud"
+      clusterIssuer: "letsencrypt-prod"
+      className: "nginx"
+    replicas: 3
+    image:
+      registry: xpkg.upbound.io
+      repository: upbound/backstage
+      tag: v0.1.0
+    config: {
+      app: {
+          title: "solution-idp"
+      }
+    }
+    infrastructure:
+      ingressNginx:
+        enabled: false
+      certManager:
+        enabled: false
+      lbController:
+        enabled: false
+      externalDNS:
+        enabled: false
+      eks:
+        enabled: false
+        clusterName: "insert-me"

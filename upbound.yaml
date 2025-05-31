@@ -1,0 +1,33 @@
+apiVersion: meta.dev.upbound.io/v1alpha1
+kind: Project
+metadata:
+  name: configuration-backstage
+spec:
+  dependsOn:
+  - function: xpkg.upbound.io/crossplane-contrib/function-auto-ready
+    version: '>=v0.0.0'
+  - provider: xpkg.upbound.io/upbound/provider-helm
+    version: v0
+  - provider: xpkg.upbound.io/upbound/provider-kubernetes
+    version: v0
+  - configuration: xpkg.upbound.io/upbound/configuration-aws-eks-pod-identity
+    version: v0.7.0
+  description: Deploys Backstage with optional AWS and Kubernetes integrations using Upbound.
+  license: Apache-2.0
+  maintainer: Upbound <info@upbound.io>
+  readme: |
+    This project provides an Upbound configuration for deploying [Backstage](https://backstage.io),
+    a developer portal platform, with optional managed services and Kubernetes integrations.
+
+    It includes a custom API definition using a CompositeResourceDefinition (XRD), a composition,
+    and an embedded function to encapsulate the logic. The configuration can provision services such as:
+
+    - Amazon Elastic Kubernetes Service (EKS)
+    - AWS networking components
+    - AWS Load Balancer Controller
+    - External DNS Controller
+    - NGINX Ingress Controller
+    - Cert Manager
+    - EKS Pod Identity
+  repository: xpkg.upbound.io/upbound/configuration-backstage
+  source: github.com/upbound/configuration-backstage
