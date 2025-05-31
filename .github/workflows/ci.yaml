@@ -50,6 +50,6 @@ jobs:
           skip-login-check: true
 
       - name: Append Extensions
-        if: env.XPKG_TAG != '' && secrets.UP_ORG != ''
+        if: env.XPKG_TAG != '' && env.UP_ORG != ''
         run: |
           up alpha xpkg append --extensions-root=./extensions ${{ env.UP_REGISTRY }}/${{ secrets.UP_ORG }}/${{ github.event.repository.name }}:${{ env.XPKG_TAG }}
