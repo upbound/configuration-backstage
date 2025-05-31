@@ -14,6 +14,8 @@ env:
   UP_API_TOKEN: ${{ secrets.UP_API_TOKEN }}
   UP_ROBOT_ID: ${{ secrets.UP_ROBOT_ID }}
   UP_ORG: ${{ secrets.UP_ORG }}
+  UP_REGISTRY: xpkg.upbound.io
+  XPKG_TAG: ${{ inputs.version }}
 
 jobs:
   deploy:
@@ -34,7 +36,7 @@ jobs:
       - name: Login to xpkg with robot
         uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # v3
         with:
-          registry: xpkg.upbound.io
+          registry: ${{ env.UP_REGISTRY }}
           username: ${{ env.UP_ROBOT_ID }}
           password: ${{ env.UP_API_TOKEN }}
 
@@ -43,6 +45,11 @@ jobs:
         uses: upbound/action-up-project@87016022642d4076f1360639bdf0f04527c28983 # v1
         with:
           push-project: true
-          tag: ${{ inputs.version || '' }}
+          tag: ${{ env.XPKG_TAG || '' }}
           # login-check does `up org list` which doesn't work with a robot-token
           skip-login-check: true
+
+      - name: Append Extensions
+        if: env.XPKG_TAG != '' && secrets.UP_ORG != ''
+        run: |
+          up alpha xpkg append --extensions-root=./extensions ${{ env.UP_REGISTRY }}/${{ secrets.UP_ORG }}/${{ github.event.repository.name }}:${{ env.XPKG_TAG }}
