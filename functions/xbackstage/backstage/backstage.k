@@ -155,21 +155,6 @@ backstage = lambda config: Backstage -> any {
                                         serviceLocatorMethod: {
                                             type: "multiTenant"
                                         }
-                                        clusterLocatorMethods: [
-                                            {
-                                                type: "config"
-                                                clusters: [
-                                                    {
-                                                        url: "https://proxy.upbound-34.168.72.36.nip.io/apis/spaces.upbound.io/v1beta1/namespaces/solution-idp-non-prod-frontend/controlplanes/frontend/k8s"
-                                                        name: "solution-idp-non-prod-frontend-frontend"
-                                                        authProvider: "serviceAccount"
-                                                        skipMetricsLookup: True
-                                                        skipTLSVerify: True
-                                                        serviceAccountToken: "\\${UP_ROBOT_TOKEN}"
-                                                    }
-                                                ]
-                                            }
-                                        ]
                                         objectTypes: [
                                             "configmaps"
                                             "deployments"

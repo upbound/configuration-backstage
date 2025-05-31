@@ -148,8 +148,8 @@ _backstage = helmv1beta1.Release {
                 }
                 backstage: {
                     image: {
-                        repository: "haarchri/solution-idp_backstage"
-                        registry: "docker.io"
+                        repository: "upbound/backstage"
+                        registry: "xpkg.upbound.io"
                         tag: "v0.1.0"
                     }
                     appConfig: {
