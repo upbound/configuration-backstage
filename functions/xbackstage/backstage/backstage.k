@@ -111,7 +111,7 @@ backstage = lambda config: Backstage -> any {
                                     techdocs: {
                                         builder: 'local'
                                         generator: {
-                                            runIn: 'docker'
+                                            runIn: 'local'
                                         }
                                         publisher: {
                                             type: 'local'
