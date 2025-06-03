@@ -64,6 +64,16 @@ backstage = lambda config: Backstage -> any {
                                             }
                                         }
                                     }
+                                    {
+                                        name: "GITHUB_TOKEN"
+                                        valueFrom: {
+                                            secretKeyRef: {
+                                                key: "token"
+                                                name: "github-pat"
+                                                optional: True
+                                            }
+                                        }
+                                    }
                                 ]
                                 appConfig: s.merge({
                                     app: {
