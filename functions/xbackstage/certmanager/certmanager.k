@@ -1,7 +1,6 @@
 import models.io.crossplane.helm.v1beta1 as helmv1beta1
 import models.io.crossplane.kubernetes.v1alpha2 as kubernetesv1alpha2
-import crossplane.v1alpha1 as crossplanev1alpha1
-
+import models.io.crossplane.apiextensions.v1alpha1 as apiextensionsv1alpha1
 import utils
 
 certManager = lambda config: CertManager -> any {
@@ -45,7 +44,7 @@ certManager = lambda config: CertManager -> any {
             }
 
         if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-cert-manager-usage-xeks".format(config.name),config.ocds):
-            crossplanev1alpha1.Usage {
+            apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-cert-manager-usage-xeks".format(config.name))
                 spec: {
                     replayDeletion: True

@@ -1,7 +1,6 @@
 import models.io.crossplane.helm.v1beta1 as helmv1beta1
 import models.io.upbound.platform.aws.v1alpha1 as awsv1alpha1
-import crossplane.v1alpha1 as crossplanev1alpha1
-
+import models.io.crossplane.apiextensions.v1alpha1 as apiextensionsv1alpha1
 import utils
 import json
 
@@ -72,7 +71,7 @@ externaldns = lambda config: ExternalDNS -> any {
             }
 
         if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-external-dns-usage-xeks".format(config.name),config.ocds):
-            crossplanev1alpha1.Usage {
+            apiextensionsv1alpha1.Usage {
             metadata: utils._metadata("{}-external-dns-usage-xeks".format(config.name))
                 spec: {
                     replayDeletion: True

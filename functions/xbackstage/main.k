@@ -5,7 +5,6 @@ import ingressnginx
 import externaldns
 import lbcontroller
 import xeks
-import utils
 import ctpSecretSync
 
 oxr = sav1alpha1.XBackstage {**option("params").oxr}

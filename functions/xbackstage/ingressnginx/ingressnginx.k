@@ -1,5 +1,5 @@
 import models.io.crossplane.helm.v1beta1 as helmv1beta1
-import crossplane.v1alpha1 as crossplanev1alpha1
+import models.io.crossplane.apiextensions.v1alpha1 as apiextensionsv1alpha1
 import utils
 
 ingressnginx = lambda iconfig: IngressNginx -> any {
@@ -58,7 +58,7 @@ ingressnginx = lambda iconfig: IngressNginx -> any {
             }
 
         if utils.ready(utils.get(iconfig.ocds, iconfig.dependsOn, {})) or utils.exists("{}-ingress-usage-xeks".format(iconfig.name),iconfig.ocds):
-            crossplanev1alpha1.Usage {
+            apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-ingress-usage-xeks".format(iconfig.name))
                 spec: {
                     replayDeletion: True

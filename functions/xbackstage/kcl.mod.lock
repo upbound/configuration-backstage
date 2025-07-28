@@ -1,12 +1,4 @@
 [dependencies]
-  [dependencies.crossplane]
-    name = "crossplane"
-    full_name = "kcl-modules_crossplane_1.19.1"
-    version = "1.19.1"
-    sum = "6kue8GBkTzL6+TfjU/ennOG01/YHM6hncDG6/htHxFs="
-    reg = "xpkg.upbound.io"
-    repo = "upbound/kcl-modules_crossplane:1.19.0"
-    oci_tag = "1.19.1"
   [dependencies.model]
     name = "model"
     full_name = "models_0.0.1"

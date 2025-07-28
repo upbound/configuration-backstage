@@ -1,5 +1,6 @@
 import models.io.crossplane.helm.v1beta1 as helmv1beta1
-import crossplane.v1alpha1 as crossplanev1alpha1
+import models.io.crossplane.apiextensions.v1alpha1 as apiextensionsv1alpha1
+
 
 import utils
 import crypto
@@ -228,7 +229,7 @@ backstage = lambda config: Backstage -> any {
             }
 
         if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-xeks".format(config.name),config.ocds):
-            crossplanev1alpha1.Usage {
+            apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-backstage-usage-xeks".format(config.name))
                 spec: {
                     replayDeletion: True
@@ -252,7 +253,7 @@ backstage = lambda config: Backstage -> any {
             }
 
         if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-lb".format(config.name),config.ocds):
-            crossplanev1alpha1.Usage {
+            apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-backstage-usage-lb".format(config.name))
                 spec: {
                     replayDeletion: True
