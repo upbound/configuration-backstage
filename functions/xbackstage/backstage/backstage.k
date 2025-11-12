@@ -1,7 +1,6 @@
 import models.io.crossplane.helm.v1beta1 as helmv1beta1
 import models.io.crossplane.apiextensions.v1alpha1 as apiextensionsv1alpha1
 
-
 import utils
 import crypto
 import strategic_merge_patch as s
@@ -11,9 +10,9 @@ backstage = lambda config: Backstage -> any {
    Creates an Backstage Deployment.
    """
     [
-        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage".format(config.name),config.ocds):
+        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage".format(config.name), config.ocds):
             helmv1beta1.Release {
-                metadata: utils._metadata( "{}-backstage".format(config.name)) | {
+                metadata: utils._metadata("{}-backstage".format(config.name)) | {
                     annotations: {
                         "crossplane.io/external-name" = "backstage"
                     }
@@ -32,7 +31,8 @@ backstage = lambda config: Backstage -> any {
                         chart: {
                             name: "backstage"
                             repository: "https://backstage.github.io/charts"
-                            version: "2.5.2"
+                            ## workaround for Bitnami chart Registry migration issue.
+                            version: "2.6.3"
                         }
                         values: ValuesSchema {
                             if config.ingress.enabled:
@@ -55,7 +55,7 @@ backstage = lambda config: Backstage -> any {
                                     registry: config.image.registry
                                     tag: config.image.tag
                                 }
-                                extraEnvVars:[
+                                extraEnvVars: [
                                     {
                                         name: "UP_ROBOT_TOKEN"
                                         valueFrom: {
@@ -157,6 +157,20 @@ backstage = lambda config: Backstage -> any {
                                         useUrlReadersSearch: True
                                     }
                                     kubernetes: {
+                                        clusterLocatorMethods: [
+                                            {
+                                                type: "config"
+                                                clusters: [
+                                                    {
+                                                        name: "local"
+                                                        authProvider: "serviceAccount"
+                                                        url: "https://kubernetes.default.svc"
+                                                        skipTLSVerify: False
+                                                        skipMetricsLookup: True
+                                                    }
+                                                ]
+                                            }
+                                        ]
                                         frontend: {
                                             podDelete: {
                                                 enabled: True
@@ -212,6 +226,11 @@ backstage = lambda config: Backstage -> any {
                                     }
                                 }, config.config)
                             }
+                            serviceAccount = {
+                                create= True
+                                name = "backstage"
+                                automountServiceAccountToken = True
+                            }
                             postgresql: ValuesSchemaPostgresql {
                                 enabled: True
                                 auth: ValuesSchemaPostgresqlAuth {
@@ -227,8 +246,7 @@ backstage = lambda config: Backstage -> any {
                     }
                 }
             }
-
-        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-xeks".format(config.name),config.ocds):
+        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-xeks".format(config.name), config.ocds):
             apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-backstage-usage-xeks".format(config.name))
                 spec: {
@@ -251,8 +269,7 @@ backstage = lambda config: Backstage -> any {
                     }
                 }
             }
-
-        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-lb".format(config.name),config.ocds):
+        if utils.ready(utils.get(config.ocds, config.dependsOn, {})) or utils.exists("{}-backstage-usage-lb".format(config.name), config.ocds):
             apiextensionsv1alpha1.Usage {
                 metadata: utils._metadata("{}-backstage-usage-lb".format(config.name))
                 spec: {

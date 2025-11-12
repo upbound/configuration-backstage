@@ -25,7 +25,7 @@ spec:
   - apiVersion: pkg.crossplane.io/v1
     kind: Configuration
     package: xpkg.upbound.io/upbound/configuration-aws-eks-pod-identity
-    version: v0.7.0
+    version: v0.8.4
   description: Deploys Backstage with optional AWS and Kubernetes integrations using
     Upbound.
   license: Apache-2.0

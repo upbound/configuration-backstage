@@ -33,6 +33,12 @@ externaldns = lambda config: ExternalDNS -> any {
                             version: "8.8.2"
                         }
                         values: {
+                            ## TEMPORARY: Allows skipping image verification for Bitnami images.
+                            global.security.allowInsecureImages = True
+                            ## Fetch latest image from Bitnami Legacy repo.
+                            image = {
+                                repository = "bitnamilegacy/external-dns"
+                            }
                             replicaCount: 2
                             provider: "aws"
                             policy: "sync"

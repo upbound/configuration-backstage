@@ -24,7 +24,7 @@ _xeks = platformawsv1alpha1.XEKS {
             }
             providerConfigName: "default"
             region: "us-west-2"
-            version: "1.27"
+            version: "1.31"
         }
         writeConnectionSecretToRef: {
             name: "test123"
@@ -131,7 +131,7 @@ _backstage = helmv1beta1.Release {
             chart: {
                 name: "backstage"
                 repository: "https://backstage.github.io/charts"
-                version: "2.5.2"
+                version: "2.6.3"
             }
             values: {
                 ingress: {
